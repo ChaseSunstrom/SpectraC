@@ -23,8 +23,6 @@ public:
   char Advance() { return m_source[m_current++]; }
   char Peek() const { return m_source[m_current]; }
   char PeekNext() const { return m_source[m_current + 1]; }
-  char PeekPrevious() const { return m_source[m_current - 1]; }
-  char PeekNextNext() const { return m_source[m_current + 2]; }
   void AddToken(TokenType type) {
     m_tokens.emplace_back(type, m_source.substr(m_start, m_current - m_start),
                           m_line);
