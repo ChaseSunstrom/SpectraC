@@ -110,6 +110,10 @@ std::string TokenTypeToString(TokenType type) {
     return "IF_KW";
   case TokenType::ELSE_KW:
     return "ELSE_KW";
+  case TokenType::PUB_KW:
+    return "PUB_KW";
+  case TokenType::PRIV_KW:
+    return "PRIV_KW";
   case TokenType::WHILE_KW:
     return "WHILE_KW";
   case TokenType::FOR_KW:
