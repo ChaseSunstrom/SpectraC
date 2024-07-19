@@ -170,6 +170,31 @@ void Lexer::Number() {
     }
   }
 
+  std::string num = m_source.substr(m_start, m_current - m_start);
+
+  if (num.find('.') != std::string::npos) {
+    if (num.find('f') != std::string::npos) {
+      AddToken(TokenType::F32);
+    } else {
+      AddToken(TokenType::F64);
+    }
+  } else {
+    i64 value = std::stoll(num);
+
+    if (value >= std::numeric_limits<i8>::min() &&
+        value <= std::numeric_limits<i8>::max()) {
+      AddToken(TokenType::I8);
+    } else if (value >= std::numeric_limits<i16>::min() &&
+               value <= std::numeric_limits<i16>::max()) {
+      AddToken(TokenType::I16);
+    } else if (value >= std::numeric_limits<i32>::min() &&
+               value <= std::numeric_limits<i32>::max()) {
+      AddToken(TokenType::I32);
+    } else {
+      AddToken(TokenType::I64);
+    }
+  }
+
   AddToken(TokenType::NUMBER);
 }
 

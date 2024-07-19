@@ -3,3 +3,7 @@ pub fn test_fn(i32 x) -> i32 {
   return x;
 }
 }
+
+str string = "test_string_eeeeee";
+
+12312311231232

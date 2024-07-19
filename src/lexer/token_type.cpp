@@ -110,10 +110,6 @@ std::string TokenTypeToString(TokenType type) {
     return "IF_KW";
   case TokenType::ELSE_KW:
     return "ELSE_KW";
-  case TokenType::PUB_KW:
-    return "PUB_KW";
-  case TokenType::PRIV_KW:
-    return "PRIV_KW";
   case TokenType::WHILE_KW:
     return "WHILE_KW";
   case TokenType::FOR_KW:
@@ -166,6 +162,46 @@ std::string TokenTypeToString(TokenType type) {
     return "SIZEOF_KW";
   case TokenType::TYPEOF_KW:
     return "TYPEOF_KW";
+  case TokenType::PUB_KW:
+    return "PUB_KW";
+  case TokenType::PRIV_KW:
+    return "PRIV_KW";
+  case TokenType::VAR_KW:
+    return "VAR_KW";
+  case TokenType::CONST_KW:
+    return "CONST_KW";
+  case TokenType::STATIC_KW:
+    return "STATIC_KW";
+  case TokenType::INLINE_KW:
+    return "INLINE_KW";
+  case TokenType::INTERFACE_KW:
+    return "INTERFACE_KW";
+  case TokenType::IMPLS_KW:
+    return "IMPLS_KW";
+  case TokenType::STR_KW:
+    return "STR_KW";
+  case TokenType::BOOL_KW:
+    return "BOOL_KW";
+  case TokenType::I8_KW:
+    return "I8_KW";
+  case TokenType::I16_KW:
+    return "I16_KW";
+  case TokenType::I32_KW:
+    return "I32_KW";
+  case TokenType::I64_KW:
+    return "I64_KW";
+  case TokenType::U8_KW:
+    return "U8_KW";
+  case TokenType::U16_KW:
+    return "U16_KW";
+  case TokenType::U32_KW:
+    return "U32_KW";
+  case TokenType::U64_KW:
+    return "U64_KW";
+  case TokenType::F32_KW:
+    return "F32_KW";
+  case TokenType::F64_KW:
+    return "F64_KW";
   case TokenType::IDENTIFIER:
     return "IDENTIFIER";
   case TokenType::STR:

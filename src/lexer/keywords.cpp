@@ -1,4 +1,5 @@
 #include "keywords.hpp"
+#include "token_type.hpp"
 
 namespace Spectra {
 
@@ -36,16 +37,24 @@ static const std::unordered_map<std::string, TokenType> keywords = {
     {"typeof", TokenType::TYPEOF_KW},
     {"pub", TokenType::PUB_KW},
     {"priv", TokenType::PRIV_KW},
-    {"i8", TokenType::I8},
-    {"i16", TokenType::I16},
-    {"i32", TokenType::I32},
-    {"i64", TokenType::I64},
-    {"u8", TokenType::U8},
-    {"u16", TokenType::U16},
-    {"u32", TokenType::U32},
-    {"u64", TokenType::U64},
-    {"f32", TokenType::F32},
-    {"f64", TokenType::F64}};
+    {"var", TokenType::VAR_KW},
+    {"const", TokenType::CONST_KW},
+    {"static", TokenType::STATIC_KW},
+    {"inline", TokenType::INLINE_KW},
+    {"interface", TokenType::INTERFACE_KW},
+    {"impls", TokenType::IMPLS_KW},
+    {"str", TokenType::STR_KW},
+    {"bool", TokenType::BOOL_KW},
+    {"i8", TokenType::I8_KW},
+    {"i16", TokenType::I16_KW},
+    {"i32", TokenType::I32_KW},
+    {"i64", TokenType::I64_KW},
+    {"u8", TokenType::U8_KW},
+    {"u16", TokenType::U16_KW},
+    {"u32", TokenType::U32_KW},
+    {"u64", TokenType::U64_KW},
+    {"f32", TokenType::F32_KW},
+    {"f64", TokenType::F64_KW}};
 
 TokenType Keywords::GetKeywordType(const std::string &text) {
   auto it = keywords.find(text);
@@ -54,4 +63,6 @@ TokenType Keywords::GetKeywordType(const std::string &text) {
   }
   return TokenType::IDENTIFIER;
 }
+
+
 } // namespace Spectra
