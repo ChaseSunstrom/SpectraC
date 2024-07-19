@@ -22,6 +22,12 @@ void Lexer::LexTokens() {
     case ')':
       AddToken(TokenType::RIGHT_PAREN);
       break;
+    case '[':
+      AddToken(TokenType::LEFT_BRACKET);
+      break;
+    case ']':
+      AddToken(TokenType::RIGHT_BRACKET);
+      break;
     case '{':
       AddToken(TokenType::LEFT_BRACE);
       break;
@@ -33,7 +39,6 @@ void Lexer::LexTokens() {
       break;
     case '.':
       if (Match('.')) {
-        Advance();
         AddToken(Match('=') ? TokenType::RANGE_INCLUSIVE : TokenType::RANGE);
       } else {
         AddToken(TokenType::DOT);
@@ -78,6 +83,9 @@ void Lexer::LexTokens() {
       AddToken(Match(':') ? TokenType::DOUBLE_COLON : TokenType::COLON);
       break;
     case '%':
+      AddToken(Match('=') ? TokenType::PERCENT_ASSIGN : TokenType::PERCENT);
+      break;
+    case '&':
       AddToken(Match('=') ? TokenType::AMPERSAND_ASSIGN : TokenType::AMPERSAND);
       break;
     case '*':
@@ -87,16 +95,20 @@ void Lexer::LexTokens() {
       AddToken(Match('=') ? TokenType::BANG_EQUAL : TokenType::BANG);
       break;
     case '=':
-      AddToken(Match('=') ? TokenType::EQUAL : TokenType::ASSIGN);
+      AddToken(Match('=')   ? TokenType::EQUAL
+               : Match('>') ? TokenType::ARM
+                            : TokenType::ASSIGN);
       break;
     case '<':
       AddToken(Match('=')   ? TokenType::LESS_EQUAL
-               : Match('<') ? TokenType::LEFT_SHIFT
+               : Match('<') ? Match('=') ? TokenType::LEFT_SHIFT_ASSIGN
+                                         : TokenType::LEFT_SHIFT
                             : TokenType::LEFT_ANGLE);
       break;
     case '>':
       AddToken(Match('=')   ? TokenType::GREATER_EQUAL
-               : Match('>') ? TokenType::RIGHT_SHIFT
+               : Match('>') ? Match('=') ? TokenType::RIGHT_SHIFT_ASSIGN
+                                         : TokenType::RIGHT_SHIFT
                             : TokenType::RIGHT_ANGLE);
       break;
     case '/':
@@ -136,6 +148,19 @@ bool Lexer::Match(char expected) {
   }
 
   m_current++;
+  return true;
+}
+
+bool Lexer::MatchNext(char expected) {
+  if (IsAtEnd()) {
+    return false;
+  }
+
+  if (m_source[m_current + 1] != expected) {
+    return false;
+  }
+
+  m_current += 2;
   return true;
 }
 

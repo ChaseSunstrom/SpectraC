@@ -68,6 +68,8 @@ std::string TokenTypeToString(TokenType type) {
     return "GREATER_EQUAL";
   case TokenType::LESS_EQUAL:
     return "LESS_EQUAL";
+  case TokenType::ARM:
+    return "ARM";
   case TokenType::PLUS_ASSIGN:
     return "PLUS_ASSIGN";
   case TokenType::MINUS_ASSIGN:
@@ -110,7 +112,9 @@ std::string TokenTypeToString(TokenType type) {
     return "IF_KW";
   case TokenType::ELSE_KW:
     return "ELSE_KW";
-  case TokenType::WHILE_KW:
+    case TokenType::ANALYZE_KW:
+    return "ANALYZE_KW";
+    case TokenType::WHILE_KW:
     return "WHILE_KW";
   case TokenType::FOR_KW:
     return "FOR_KW";

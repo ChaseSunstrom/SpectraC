@@ -17,6 +17,7 @@ public:
   void Number();
   void Identifier();
   bool Match(char expected);
+  bool MatchNext(char expected);
   bool IsAlpha(char c) const { return std::isalpha(c) || c == '_'; }
   bool IsDigit(char c) const { return std::isdigit(c); }
   bool IsAtEnd() const { return m_current >= m_source.size(); }
