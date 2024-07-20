@@ -11,7 +11,7 @@ public:
   Lexer(const std::string &source) : m_source(source) {}
   ~Lexer() = default;
 
-  void LexTokens();
+  std::vector<Token> LexTokens();
   void PrintTokens() const;
   void String();
   void Number();

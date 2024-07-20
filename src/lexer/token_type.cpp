@@ -48,6 +48,8 @@ std::string TokenTypeToString(TokenType type) {
     return "TILDE";
   case TokenType::CARET:
     return "CARET";
+  case TokenType::PERCENT_ASSIGN:
+    return "PERCENT_ASSIGN";
   case TokenType::AMPERSAND:
     return "AMPERSAND";
   case TokenType::PIPE:
@@ -112,9 +114,9 @@ std::string TokenTypeToString(TokenType type) {
     return "IF_KW";
   case TokenType::ELSE_KW:
     return "ELSE_KW";
-    case TokenType::ANALYZE_KW:
+  case TokenType::ANALYZE_KW:
     return "ANALYZE_KW";
-    case TokenType::WHILE_KW:
+  case TokenType::WHILE_KW:
     return "WHILE_KW";
   case TokenType::FOR_KW:
     return "FOR_KW";
