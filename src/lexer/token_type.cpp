@@ -130,6 +130,10 @@ std::string TokenTypeToString(TokenType type) {
     return "TRUE_KW";
   case TokenType::FALSE_KW:
     return "FALSE_KW";
+  case TokenType::GENERIC_KW:
+    return "GENERIC_KW";
+  case TokenType::THIS_KW:
+    return "THIS_KW";
   case TokenType::NULL_KW:
     return "NULL_KW";
   case TokenType::FN_KW:

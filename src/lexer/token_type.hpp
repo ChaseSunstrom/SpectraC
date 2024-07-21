@@ -104,6 +104,8 @@ enum class TokenType {
   PRIV_KW,
   INTERFACE_KW,
   IMPLS_KW,
+  GENERIC_KW,
+  THIS_KW,
   STR_KW,
   BOOL_KW,
   I8_KW,

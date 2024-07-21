@@ -1,6 +1,7 @@
 #ifndef SPECTRAC_PARSER_HPP
 #define SPECTRAC_PARSER_HPP
 
+#include "ast.hpp"
 #include "grammar.hpp"
 #include "symbol.hpp"
 
@@ -31,6 +32,7 @@ private:
   ActionType m_type;
   i32 m_value;
 };
+
 class ParsingTable {
 public:
   ParsingTable() = default;
@@ -132,6 +134,7 @@ private:
   size_t GetGotoState(const std::vector<ItemSet> &canonical_collection,
                       const ItemSet &item_set, const GrammarSymbol &symbol);
   size_t GetRuleIndex(const Grammar &grammar, const LR1Item &item);
+  bool CanBeEmpty(const GrammarSymbol &symbol, const Grammar &grammar);
 };
 
 class Parser {

@@ -1,6 +1,4 @@
 #include "parser.hpp"
-#include <algorithm>
-#include <queue>
 
 namespace Spectra {
 
@@ -63,6 +61,23 @@ LALRParserGenerator::ComputeLookahead(const LR1Item &item,
   return lookahead;
 }
 
+bool LALRParserGenerator::CanBeEmpty(const GrammarSymbol &symbol,
+                                     const Grammar &grammar) {
+  if (std::holds_alternative<TokenType>(symbol)) {
+    return false; // Tokens are never empty
+  } else {
+    const auto &non_terminal = std::get<NonTerminal>(symbol);
+    const auto &rule = grammar.GetRule(non_terminal.GetName());
+    // Check if any of the productions can be empty
+    for (const auto &component : rule.GetComponents()) {
+      if (CanBeEmpty(component, grammar)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
 std::set<TokenType>
 LALRParserGenerator::ComputeFirst(const GrammarSymbol &symbol,
                                   const Grammar &grammar) {
@@ -75,7 +90,8 @@ LALRParserGenerator::ComputeFirst(const GrammarSymbol &symbol,
     for (const auto &component : rule.GetComponents()) {
       auto component_first = ComputeFirst(component, grammar);
       first.insert(component_first.begin(), component_first.end());
-      if (component_first.find(TokenType::EPSILON) == component_first.end()) {
+      // If this component can't be empty, stop here
+      if (!CanBeEmpty(component, grammar)) {
         break;
       }
     }
@@ -86,8 +102,8 @@ LALRParserGenerator::ComputeFirst(const GrammarSymbol &symbol,
 std::vector<ItemSet> LALRParserGenerator::GenerateCanonicalCollection(
     const std::vector<LR0Item> &lr0_items, const Grammar &grammar) {
   std::vector<ItemSet> C;
-  ItemSet initial_set =
-      Closure({{grammar.GetStartSymbol(), {}, 0, {TokenType::END}}}, grammar);
+  ItemSet initial_set = Closure(
+      {{grammar.GetStartSymbol(), {}, 0, {TokenType::END_OF_FILE}}}, grammar);
   C.push_back(initial_set);
 
   bool changed;
@@ -108,7 +124,8 @@ std::vector<ItemSet> LALRParserGenerator::GenerateCanonicalCollection(
           }
           J = Closure(J, grammar);
           if (std::find(C.begin(), C.end(), J) == C.end() &&
-              std::find(new_sets.begin(), new_sets.end(), J) == new_sets.end()) {
+              std::find(new_sets.begin(), new_sets.end(), J) ==
+                  new_sets.end()) {
             new_sets.push_back(J);
             changed = true;
           }
@@ -123,8 +140,8 @@ std::vector<ItemSet> LALRParserGenerator::GenerateCanonicalCollection(
 
 void LALRParserGenerator::ComputeLALR1Lookaheads(
     std::vector<ItemSet> &canonical_collection, const Grammar &grammar) {
-  std::map<std::pair<i32, i32>, std::set<TokenType>> propagation_graph;
-  std::queue<std::pair<i32, i32>> work_list;
+  std::map<std::pair<size_t, size_t>, std::set<TokenType>> propagation_graph;
+  std::queue<std::pair<size_t, size_t>> work_list;
 
   // Initialize propagation graph and work list
   for (size_t i = 0; i < canonical_collection.size(); ++i) {
@@ -147,7 +164,7 @@ void LALRParserGenerator::ComputeLALR1Lookaheads(
     auto [from_state, to_state] = work_list.front();
     work_list.pop();
 
-    for (const auto &item : canonical_collection[to_state]) {
+    for (auto &item : canonical_collection[to_state]) {
       if (item.dot_position == item.production.size()) {
         std::set<TokenType> new_lookahead =
             propagation_graph[{from_state, to_state}];
@@ -186,7 +203,7 @@ void LALRParserGenerator::ConstructParsingTables(
       } else {
         for (const auto &lookahead : item.lookahead) {
           if (item.non_terminal == grammar.GetStartSymbol() &&
-              lookahead == TokenType::END) {
+              lookahead == TokenType::END_OF_FILE) {
             tables.AddAction(i, lookahead, ParsingAction::Accept());
           } else {
             size_t rule_index = GetRuleIndex(grammar, item);
@@ -232,8 +249,8 @@ AstNodePtr Parser::Parse(const std::vector<Token> &tokens) {
   size_t index = 0;
   while (true) {
     i32 state = state_stack.top();
-    TokenType lookahead =
-        (index < tokens.size()) ? tokens[index].GetType() : TokenType::END;
+    TokenType lookahead = (index < tokens.size()) ? tokens[index].GetType()
+                                                  : TokenType::END_OF_FILE;
 
     const ParsingAction &action = m_tables.GetAction(state, lookahead);
     switch (action.GetType()) {
@@ -253,7 +270,8 @@ AstNodePtr Parser::Parse(const std::vector<Token> &tokens) {
       }
       AstNodePtr new_node = rule.GetAction()(children);
       node_stack.push(new_node);
-      i32 next_state = m_tables.GetGoto(state_stack.top(), rule.GetComponents()[0].GetName());
+      i32 next_state = m_tables.GetGoto(state_stack.top(),
+                                        rule.GetComponents()[0].GetName());
       state_stack.push(next_state);
       break;
     }
