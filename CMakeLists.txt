@@ -15,7 +15,13 @@ set(SOURCES
     src/lexer/token_type.hpp
     src/lexer/token_type.cpp
     src/lexer/keywords.hpp
-    src/lexer/keywords.cpp)
+    src/lexer/keywords.cpp
+    src/parser/grammar.hpp
+    src/parser/grammar.cpp
+    src/parser/parser.cpp
+    src/parser/parser.hpp
+    src/parser/ast.hpp
+    src/parser/symbol.hpp)
 
 # Create the executable
 add_executable(SpectraC ${SOURCES})
